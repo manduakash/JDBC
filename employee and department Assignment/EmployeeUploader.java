@@ -28,7 +28,7 @@ public class EmployeeUploader {
 			Statement st = conn.createStatement();
 			
 			//validations
-			ResultSet rs = st.executeQuery("select employee_id, employee_name, employee_contactNo, employee_salary, department_id from employee_table,department_table where employee_id="+employee_id);
+			ResultSet rs = st.executeQuery("select employee_id, employee_name, employee_contactNo, employee_salary, count(department_id) from employee_table,department_table where employee_id="+employee_id+" and department_id="+department_id);
 			while(rs.next()) {
 				DBemployee_id=rs.getInt(1);
 				DBemployee_name=rs.getString(2);
@@ -42,6 +42,8 @@ public class EmployeeUploader {
 			}
 			if(employee_salary<1000) {
 				throw new lessSalaryAmountException("Salary can not be less than 1000/-");
+			}if(DBdepartment_id==0){
+				throw new departmentNotPresentException("Department does not exists");
 			}
 			else {
 			st.executeUpdate("insert into employee_table values("+employee_id+", '"+employee_name+"', "+employee_salary+", "+employee_contactNo+", '"+employee_address+"', "+department_id+")");
@@ -66,7 +68,7 @@ public class EmployeeUploader {
 			if(employee_id==0) {
 				System.out.println("Employee ID not present...");
 			}else {				
-				System.out.println("\nemployee_id= '"+employee_id+"', \nemployee_name= '"+employee_name+"', \nemployee_contactNo= '"+employee_contactNo+" ', \nemployee_address= '"+employee_address+"', \ndepartment_name= '" +department_name+ "', \ndepartment_head= '"+department_head+"'\n");
+				System.out.println("--------------------------------\nemployee_id= '"+employee_id+"', \nemployee_name= '"+employee_name+"', \nemployee_contactNo= '"+employee_contactNo+" ', \nemployee_address= '"+employee_address+"', \ndepartment_name= '" +department_name+ "', \ndepartment_head= '"+department_head+"'\n");
 			}
 		}
 		//fetching datas
